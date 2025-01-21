@@ -16,6 +16,7 @@ class ProductData {
     current_page?: number;
     page_size?: number;
     total_pages?: number;
+    total_products?: number;
 
     constructor(data: Product[]) {
         this.products = data;
@@ -56,6 +57,7 @@ class ProductData {
         pd.current_page = page;
         pd.total_pages = totalPages;
         pd.page_size = productsPerPage;
+        pd.total_products = totalProducts;
 
         return pd;
     }

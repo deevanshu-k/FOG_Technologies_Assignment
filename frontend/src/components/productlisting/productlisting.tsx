@@ -1,62 +1,62 @@
 import FilterHeader from "./filterheader";
 import ProductList from "./productlist";
-import Product from "../../interfaces/product.interface";
 import Pagination from "./pagination";
-import { useState } from "react";
-
-const data: Product[] = [
-    {
-        id: 1,
-        brandName: "Syltherine",
-        productName: "Stylish Cafe Chair",
-        category: "",
-        price: 3500000,
-        discountPrice: 2500000,
-        image: "http://127.0.0.1:9000/public/syltherine.svg",
-        latest: false,
-    },
-    {
-        id: 2,
-        brandName: "Leviosa",
-        productName: "Stylish Chair",
-        category: "",
-        price: 2500000,
-        discountPrice: null,
-        image: "http://127.0.0.1:9000/public/leviosa.svg",
-        latest: false,
-    },
-    {
-        id: 3,
-        brandName: "Lolito",
-        productName: "Luxury Big Sofa",
-        category: "",
-        price: 1400000,
-        discountPrice: 700000,
-        image: "http://127.0.0.1:9000/public/lolito.svg",
-        latest: false,
-    },
-    {
-        id: 4,
-        brandName: "Respira",
-        productName: "Outdoor Bar Table and Stool",
-        category: "",
-        price: 500000,
-        discountPrice: null,
-        image: "http://127.0.0.1:9000/public/respira.svg",
-        latest: true,
-    },
-];
+import { useEffect, useReducer, useState } from "react";
+import { fetchProductReducer, productInitialState } from "./product.state";
 
 const ProductListing = () => {
+    const [productData, dispatch] = useReducer(
+        fetchProductReducer,
+        productInitialState
+    );
     const [currentpage, setCurrentPage] = useState(1);
+    const [productperpage, setProductPerPage] = useState(16);
+    const [sortby, setSortBy] = useState<"price" | "brand" | "default">(
+        "default"
+    );
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [productData]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            dispatch({ type: "FETCH_INIT", payload: null });
+            try {
+                let url = `http://127.0.0.1:9000/api/products?page=${currentpage}&productperpage=${productperpage}`;
+                if (sortby != "default") {
+                    url += `&sortBy=${sortby}`;
+                }
+                const response = await fetch(url); // Replace with your API
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const result = await response.json();
+
+                dispatch({ type: "FETCH_SUCCESS", payload: result });
+            } catch (error) {
+                console.log(error);
+                dispatch({ type: "FETCH_FAILURE", payload: null });
+            }
+        };
+        fetchData();
+    }, [currentpage, productperpage, sortby]);
+
     return (
         <>
-            <FilterHeader />
-            <ProductList products={data} />
+            <FilterHeader
+                productperpage={productperpage}
+                setProductPerPage={setProductPerPage}
+                setCurrentPage={setCurrentPage}
+                setSortBy={setSortBy}
+                total_products={productData.total_products}
+                current_page={productData.current_page}
+            />
+            <ProductList products={productData.products} />
             <Pagination
                 currentpage={currentpage}
                 setCurrentPage={setCurrentPage}
-                totalpages={10}
+                totalpages={productData.total_pages}
             />
         </>
     );
