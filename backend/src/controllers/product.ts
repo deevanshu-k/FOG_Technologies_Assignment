@@ -149,6 +149,11 @@ export const getProducts = (req: Request, res: Response) => {
         // Paginate
         productData = productData.paginate(parsedPage, parsedProductsPerPage);
 
+        // Update link
+        productData.products = productData.products.map((p) => ({
+            ...p,
+            image: `http://${process.env.HOST}:${process.env.PORT}${p.image}`,
+        }));
         res.json(productData);
     } catch (error) {
         res.status(500).json({

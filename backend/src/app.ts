@@ -1,9 +1,20 @@
 import express, { NextFunction, Request, Response } from "express";
 import routes from "./routes";
+import path from "path";
+import dotenv from "dotenv";
+const cors = require("cors");
 const app = express();
 
-const PORT = 9000;
-const HOST = "127.0.0.1";
+dotenv.config();
+
+const PORT = Number(process.env.PORT) ?? 8000;
+const HOST = process.env.HOST ?? "127.0.0.1";
+
+// Enable CORS for all origins (or customize for specific domains)
+app.use(cors()); // This will allow all domains to access your server
+
+// Serve static files from the 'public' directory
+app.use("/public", express.static(path.join(__dirname, "../public")));
 
 app.use("/api", routes);
 
