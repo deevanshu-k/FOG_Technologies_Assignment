@@ -3,6 +3,7 @@ import Product from "../../interfaces/product.interface";
 import shareImage from "../../assets/Product/share.svg";
 import compareImage from "../../assets/Product/compare.svg";
 import likeImage from "../../assets/Product/like.svg";
+import config from "../../../config.json";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     const calculateDiscountPersentage = (): number => {
@@ -13,7 +14,10 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     };
     return (
         <div className="relative group w-[285px] bg-[#F4F5F7]">
-            <img className="w-[285px] h-[301px] bg-cover" src={product.image} />
+            <img
+                className="w-[285px] h-[301px] bg-cover"
+                src={`${config.backend}${product.image}`}
+            />
             <div className="py-3 px-4 h-[145px] flex flex-col justify-evenly">
                 <h4 className="text-xl md:text-[24px] font-[600] text-[#3A3A3A]">
                     {product.brandName}

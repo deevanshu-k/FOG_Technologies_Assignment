@@ -37,7 +37,6 @@ export const fetchProductReducer = (
                 current_page: 1,
                 total_pages: 0,
                 total_products: 0,
-                products: [],
             };
         case "FETCH_SUCCESS":
             if (!action.payload) return { ...state };

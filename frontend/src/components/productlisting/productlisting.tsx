@@ -18,9 +18,6 @@ const ProductListing = () => {
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [productData]);
-
-    useEffect(() => {
         const fetchData = async () => {
             dispatch({ type: "FETCH_INIT", payload: null });
             try {
