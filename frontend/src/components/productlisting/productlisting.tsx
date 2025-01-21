@@ -3,6 +3,7 @@ import ProductList from "./productlist";
 import Pagination from "./pagination";
 import { useEffect, useReducer, useState } from "react";
 import { fetchProductReducer, productInitialState } from "./product.state";
+import config from "../../../config.json";
 
 const ProductListing = () => {
     const [productData, dispatch] = useReducer(
@@ -23,7 +24,7 @@ const ProductListing = () => {
         const fetchData = async () => {
             dispatch({ type: "FETCH_INIT", payload: null });
             try {
-                let url = `http://127.0.0.1:9000/api/products?page=${currentpage}&productperpage=${productperpage}`;
+                let url = `${config.backend}/api/products?page=${currentpage}&productperpage=${productperpage}`;
                 if (sortby != "default") {
                     url += `&sortBy=${sortby}`;
                 }
